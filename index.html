@@ -1,0 +1,46 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini AI Chat</title>
+</head>
+<body>
+  <h1>Chat with Google’s Gemini Model</h1>
+  
+  <form id="chatForm">
+    <label for="userMessage">Enter your message:</label><br>
+    <textarea id="userMessage" rows="4" cols="50"></textarea><br><br>
+    <button type="submit">Send</button>
+  </form>
+
+  <h3>Response:</h3>
+  <div id="response"></div>
+
+  <script>
+    document.getElementById('chatForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      
+      const userMessage = document.getElementById('userMessage').value;
+      if (!userMessage) return;
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: userMessage })
+        });
+
+        const data = await response.json();
+        document.getElementById('response').innerText = data.response || "No response received.";
+      } catch (error) {
+        document.getElementById('response').innerText = "Error: Unable to process the request.";
+        console.error('Error:', error);
+      }
+    });
+  </script>
+</body>
+</html>
